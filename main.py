@@ -1,21 +1,25 @@
 from fastapi import FastAPI, HTTPException
-from transformers import MarianMTModel, MarianTokenizer
-from typing import List
+from transformers import AutoProcessor, SeamlessM4Tv2Model
+from typing import List, Dict
+import json
+import os
 
 app = FastAPI()
 
 # Load the pre-trained model and tokenizer
-model_name = 'Helsinki-NLP/opus-mt-zh-en'
-tokenizer = MarianTokenizer.from_pretrained(model_name)
-model = MarianMTModel.from_pretrained(model_name)
+with open("config.json", "r") as f:
+    config = json.loads(f.read())
+model_path = os.path.join(config['model_dir'], config['model_name'])
+processor = AutoProcessor.from_pretrained(model_path)
+model = SeamlessM4Tv2Model.from_pretrained(model_path)
 
 
 @app.post("/translate")
-async def translate(sentences: List[str]):
+async def translate(sentences: List[str], src_lang: str, tgt_lang: str) -> Dict[str, List[str]]:
     translations = []
     for sentence in sentences:
-        inputs = tokenizer.encode(sentence, return_tensors="pt", padding=True)
-        outputs = model.generate(inputs, max_length=40, num_beams=4, early_stopping=True)
-        translated_sentence = tokenizer.decode(outputs[0], skip_special_tokens=True)
-        translations.append(translated_sentence)
+        inputs = processor(text=sentence, src_lang=src_lang, return_tensors="pt")
+        output_tokens = model.generate(**inputs, tgt_lang=tgt_lang, generate_speech=False)
+        translated_text = processor.decode(output_tokens[0].tolist()[0], skip_special_tokens=True)
+        translations.append(translated_text)
     return {"translated_sentences": translations}

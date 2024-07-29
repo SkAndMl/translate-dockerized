@@ -5,6 +5,10 @@ services:
       - "8000:8000"
     volumes:
       - /app/venv
-      - ./main.py:/main.py
-      - ./data:/data
-      - ./test.py:/test.py
+      - ./main.py:/app/main.py
+      - ./data:/app/data
+      - ./config.json:/app/config.json
+      - ./test.py:/app/test.py
+      - ./download_model.py:/app/download_model.py
+      - ./download_model.sh:/app/download_model.sh
+      - ./run_test.sh:/app/run_test.sh
