@@ -5,7 +5,7 @@ from typing import List
 app = FastAPI()
 
 # Load the pre-trained model and tokenizer
-model_name = 'Helsinki-NLP/opus-mt-en-fr'
+model_name = 'Helsinki-NLP/opus-mt-zh-en'
 tokenizer = MarianTokenizer.from_pretrained(model_name)
 model = MarianMTModel.from_pretrained(model_name)
 
