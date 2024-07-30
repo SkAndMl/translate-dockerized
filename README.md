@@ -11,11 +11,11 @@
 git clone https://github.com/SkAndMl/translate-dockerized.git 
 ```
 3. cd into the repo
-   ```bash
-   cd translate-dockerized
-   ```
+```bash
+cd translate-dockerized
+```
 4. Create the docker container and run the translation api using
-   ```bash
-   docker-compose up --build
-   ```
+```bash
+docker-compose up --build
+```
 5. Verify and use the api at `https://localhost:8000/docs` , the translate api expects a list of sentences along with the source and target languages
